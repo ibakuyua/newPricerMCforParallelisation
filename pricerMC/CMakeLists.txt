@@ -41,9 +41,13 @@ set(LIBS ${LIBS} m)
 # Testing pnl Library example
 
 #Testing BlackScholesModel
-
+add_executable(BSModelAsset_t-test.te src/tests/test_BlackScholesAsset_t.cpp src/BlackScholesModel.cpp)
+target_link_libraries(BSModelAsset_t-test.te ${LIBS})
 #Testing MonteCarlo
-
+add_executable(MonteCarloPrice0-test.te src/tests/test_MonteCarloPrice0.cpp src/MonteCarlo.cpp src/BlackScholesModel.cpp src/Options/OptionBasket.cpp src/Options/Option.cpp)
+target_link_libraries(MonteCarloPrice0-test.te ${LIBS})
+add_executable(MonteCarloPrice_t-test.te src/tests/test_MonteCarloPrice_t.cpp src/MonteCarlo.cpp src/BlackScholesModel.cpp src/Options/OptionBasket.cpp src/Options/Option.cpp)
+target_link_libraries(MonteCarloPrice_t-test.te ${LIBS})
 #Testing Options
 
 #Testing Pricer

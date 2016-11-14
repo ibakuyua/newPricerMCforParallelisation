@@ -13,7 +13,7 @@ using namespace std;
 
 void displayParameter(int size, double r, double rho, double sigmaV, int n, double maturity, double t, double** past, double K, int M);
 
-#define NB_TIMEVALUE_KNOWN 4 // Must be equal to (int)(t*N/maturity)+1]
+#define NB_TIMEVALUE_KNOWN 8 // Must be equal to (int)(t*N/maturity)+2]
 #define NB_ASSET 1 // Must be equal to size
 
 int main (int argc, char** argv) {
@@ -21,7 +21,7 @@ int main (int argc, char** argv) {
     int size = NB_ASSET;
     double r = 0.02;
     double rho = 0.5;
-    double sigmaV = 0.1;
+    double sigmaV = 0.2;
     int N = 20;
     double maturity = 10;
     double t = 3.3;
@@ -34,7 +34,8 @@ int main (int argc, char** argv) {
                                                       {112.6},
                                                       {115.9},
                                                       {113.9},
-                                                      {116.2}}; // S(t)
+                                                      {116.2},
+                                                      {177.4}}; // S(t)
 
 
     /////////////////////////////////////////////////////////////////////////////////
