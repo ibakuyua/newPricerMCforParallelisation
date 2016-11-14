@@ -37,12 +37,8 @@ endif()
 # Add math lib
 set(LIBS ${LIBS} m)
 # Testing the parser
-add_executable(parser-test.te src/parser.cpp src/tests/test_parser.cpp)
-target_link_libraries(parser-test.te ${LIBS})
 
 # Testing pnl Library example
-add_executable(mc-example.te src/tests/mc_example.cpp)
-target_link_libraries(mc-example.te ${LIBS})
 
 #Testing BlackScholesModel
 
