@@ -6,7 +6,7 @@
 correlation <float> 0.3
 dividend rate <vector> 0 
 fd step <float> 0.1
-hedging dates number <int> 104
+hedging dates number <int> 1000
 interest rate <float> 0.3
 maturity <float> 2
 model type <string> bs

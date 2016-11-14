@@ -18,4 +18,4 @@ spot <vector> 100
 strike <float> 100
 TimeStep number <int> 1
 trend <vector> 0.05 
-volatility <vector> 0.2 
+volatility <vector> 0.2

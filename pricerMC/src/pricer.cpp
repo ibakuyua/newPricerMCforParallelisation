@@ -119,9 +119,9 @@ void priceAtZero(ParserDatas *datas) {
     // Display results
     displayParameters(datas);
     cout << "\n -----> Price [ " << price << " ]\n";
+    cout << "\n -----> IC [ " << ic << " ]\n\n";
     cout << "\n -----> Delta : \n";
     pnl_vect_print(delta);
-    cout << "\n -----> IC [ " << ic << " ]\n\n";
 
     // Free
     delete model;
