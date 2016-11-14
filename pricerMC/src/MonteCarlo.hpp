@@ -16,6 +16,7 @@ public:
     double fdStep_; /*! pas de différence finie */
     int nbSamples_; /*! nombre de tirages Monte Carlo */
     PnlMat *path; /*! path for simulation : initialized one times only*/
+    PnlMat *pathShifted; /*! pathShifted for delta simulation : initialized one times only*/
 
     /**
      * Constructor

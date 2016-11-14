@@ -1,0 +1,20 @@
+# MC price: 7.737553
+# price std_dev: 0.035907
+# MC delta: 0.572671 
+# delta std_dev: 0.001511 
+# CPU time : 0.136412
+correlation <float> 0.3
+fd step <float> 0.1
+hedging dates number <int> 104
+interest rate <float> 0.03
+maturity <float> 2
+model type <string> bs
+option size <int> 1
+option type <string> asian
+payoff coefficients <vector> 1 
+sample number <long> 100000
+spot <vector> 100 
+strike <float> 100
+TimeStep number <int> 26
+trend <vector> 0.1 
+volatility <vector> 0.2 

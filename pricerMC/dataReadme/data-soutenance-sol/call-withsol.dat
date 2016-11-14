@@ -1,0 +1,21 @@
+# MC price: 16.124696
+# price std_dev: 0.101236
+# MC delta: 0.682450 
+# delta std_dev: 0.002588 
+# CPU time : 0.009598
+correlation <float> 0
+dividend rate <vector> 0 
+fd step <float> 0.1
+hedging dates number <int> 104
+interest rate <float> 0.05
+maturity <float> 2
+model type <string> bs
+option size <int> 1
+option type <string> basket
+payoff coefficients <vector> 1 
+sample number <long> 50000
+spot <vector> 100 
+strike <float> 100
+TimeStep number <int> 1
+trend <vector> 0.05 
+volatility <vector> 0.2 

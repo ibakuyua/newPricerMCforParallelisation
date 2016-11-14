@@ -43,6 +43,12 @@ set(LIBS ${LIBS} m)
 #Testing BlackScholesModel
 add_executable(BSModelAsset_t-test.te src/tests/test_BlackScholesAsset_t.cpp src/BlackScholesModel.cpp)
 target_link_libraries(BSModelAsset_t-test.te ${LIBS})
+add_executable(BSModelAssetShift.te src/tests/test_BlackScholesAssetShift.cpp src/BlackScholesModel.cpp)
+target_link_libraries(BSModelAssetShift.te ${LIBS})
+add_executable(BSModelDelta-test0.te src/tests/test_delta0.cpp src/Options/OptionBasket.cpp src/Options/Option.cpp src/BlackScholesModel.cpp src/MonteCarlo.cpp)
+target_link_libraries(BSModelDelta-test0.te ${LIBS})
+add_executable(BSModelDelta-test_t.te src/tests/test_delta_t.cpp src/Options/OptionBasket.cpp src/Options/Option.cpp src/BlackScholesModel.cpp src/MonteCarlo.cpp)
+target_link_libraries(BSModelDelta-test_t.te ${LIBS})
 #Testing MonteCarlo
 add_executable(MonteCarloPrice0-test.te src/tests/test_MonteCarloPrice0.cpp src/MonteCarlo.cpp src/BlackScholesModel.cpp src/Options/OptionBasket.cpp src/Options/Option.cpp)
 target_link_libraries(MonteCarloPrice0-test.te ${LIBS})
