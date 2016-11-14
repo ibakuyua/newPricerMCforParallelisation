@@ -3,6 +3,7 @@
 #include "pnl/pnl_random.h"
 #include "pnl/pnl_vector.h"
 #include "pnl/pnl_matrix.h"
+#include "pnl/pnl_finance.h"
 #include <typeinfo>
 
 using namespace std;
@@ -65,11 +66,12 @@ int main(int argc, char** argv){
     cout << "Price sur l'option : \n";
     displayOption(*basket);
     cout << "\n---> Prix : " << prix;
-    cout << "\n---> Intervalle de confiance : " << ic;
-
     double prixFF;
 
+    prixFF = pnl_bs_call(spotV,K,maturity,r,0,sigmaV);
+
     cout << "\n---> Prix formule fermée : " << prixFF;
+    cout << "\n---> Intervalle de confiance : " << ic;
 
     cout << "\n\nCHECK";
 
