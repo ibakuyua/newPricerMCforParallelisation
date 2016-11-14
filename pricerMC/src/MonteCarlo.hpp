@@ -15,6 +15,7 @@ public:
     PnlRng *rng_; /*! pointeur sur le générateur */
     double fdStep_; /*! pas de différence finie */
     int nbSamples_; /*! nombre de tirages Monte Carlo */
+    PnlMat *path; /*! path for simulation : initialized one times only*/
 
     /**
      * Constructor
