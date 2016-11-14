@@ -1,0 +1,19 @@
+##First delta needs to be inferior 
+
+model type <string> bs
+option size <int> 40
+strike <float> 90
+spot <vector> 100
+maturity <float> 5
+volatility <vector> 0.5 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+interest rate <float>  0.03
+correlation <float> 0.3
+
+option type <string> asian
+
+TimeStep number <int> 50
+sample number <long> 100000
+
+trend <vector> 0.7 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+hedging dates number <int> 500
+

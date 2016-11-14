@@ -1,0 +1,16 @@
+#No Volatility --> buying of the basket 
+
+
+option size <int> 40
+strike <float> 70
+spot <vector> 100  
+maturity <float> 2
+volatility <vector> 0  
+interest rate <float>   0.04879
+correlation <float> 0.8
+
+option type <string> basket
+payoff coefficients <vector> 0.025
+timestep number <int> 1
+sample number <long> 50000
+
