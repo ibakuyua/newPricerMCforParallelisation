@@ -38,6 +38,8 @@ BlackScholesModel::BlackScholesModel(int size, double r, double rho, PnlVect *si
 
     // Cholesky initialisation (computed just one time and not for each asset call)
     L = getCholeskyFromRho(size,rho);
+    Gi_ = pnl_vect_new();
+    LGi_ = pnl_vect_new();
 }
 
 void BlackScholesModel::asset(PnlMat *path, double t, double T, int nbTimeSteps, PnlRng *rng, const PnlMat *past) {
@@ -55,9 +57,9 @@ void BlackScholesModel::asset(PnlMat *path, double t, double T, int nbTimeSteps,
     double step = T/nbTimeSteps;
     double sqrtStep = sqrt(step);
     // For the Gaussian vector
-    PnlVect *Gi = pnl_vect_new();
+    //PnlVect *Gi = pnl_vect_new();
     // For the multiplication between L and Gi
-    PnlVect *LGi;
+    //PnlVect *LGi;
     // The index after t
     int indexAftert = past->m - 1;
     // Number of value to simulate
@@ -68,13 +70,13 @@ void BlackScholesModel::asset(PnlMat *path, double t, double T, int nbTimeSteps,
     double firstStep = MAX(step * indexAftert - t,0);
     double sqrtFirstStep = sqrt(firstStep);
     // G_0 : First gaussian vector
-    pnl_vect_rng_normal_d(Gi,path->n,rng);
+    pnl_vect_rng_normal_d(Gi_,path->n,rng);
     // All the LdGi
-    LGi = pnl_mat_mult_vect(L,Gi);
+    LGi_ = pnl_mat_mult_vect(L,Gi_);
     for (int d = 0; d < path->n; ++d) {
         double sigma_d = GET(sigma_,d);
         double Sd_t = GET(St, d);
-        double LdGi = GET(LGi, d);
+        double LdGi = GET(LGi_, d);
 
         double value = exp((r_ - sigma_d * sigma_d / 2) * firstStep + sigma_d * sqrtFirstStep * LdGi);
 
@@ -86,13 +88,13 @@ void BlackScholesModel::asset(PnlMat *path, double t, double T, int nbTimeSteps,
     // For all other simulation
     for (int i = 1; i < nbToSimulate; ++i) {
         // Same processus that beside but with a different step
-        pnl_vect_rng_normal_d(Gi, path->n, rng);
-        LGi = pnl_mat_mult_vect(L, Gi);
+        pnl_vect_rng_normal_d(Gi_, path->n, rng);
+        LGi_ = pnl_mat_mult_vect(L, Gi_);
         // For each asset
         for (int d = 0; d < path->n; ++d) {
             double sigma_d = GET(sigma_,d);
             double Sd_t = GET(St, d);
-            double LdGi = GET(LGi, d);
+            double LdGi = GET(LGi_, d);
 
             double value = value_tiMinus1[d] * exp((r_ - sigma_d * sigma_d/2) * step + sigma_d * sqrtStep * LdGi);
 
@@ -103,8 +105,8 @@ void BlackScholesModel::asset(PnlMat *path, double t, double T, int nbTimeSteps,
     }
     // Free
     pnl_vect_free(&St);
-    pnl_vect_free(&Gi);
-    pnl_vect_free(&LGi);
+    //pnl_vect_free(&Gi);
+    //pnl_vect_free(&LGi);
 }
 
 void BlackScholesModel::asset(PnlMat *path, double T, int nbTimeSteps, PnlRng *rng) {
@@ -116,18 +118,18 @@ void BlackScholesModel::asset(PnlMat *path, double T, int nbTimeSteps, PnlRng *r
     for (int d = 0; d < path->n; ++d)
         PNL_MSET(path, 0, d, GET(spot_,d));
     // For the Gaussian vector
-    PnlVect *Gi = pnl_vect_new();
+    //PnlVect *Gi = pnl_vect_new();
     // For multiplication between L and Gi
-    PnlVect *LGi = pnl_vect_new();
+    //PnlVect *LGi = pnl_vect_new();
     // For each time
     for (int i = 1; i < path->m; ++i) {
-        pnl_vect_rng_normal_d(Gi,path->n,rng); // Gi gaussian vector
-        LGi =  pnl_mat_mult_vect(L,Gi); // All the LdGi
+        pnl_vect_rng_normal_d(Gi_,path->n,rng); // Gi gaussian vector
+        LGi_ =  pnl_mat_mult_vect(L,Gi_); // All the LdGi
         // For each asset
         for (int d = 0; d < path->n; ++d) {
             double sigma_d = GET(sigma_,d);
             double Sd_tiMinus1 = PNL_MGET(path, (i-1), d);
-            double LdGi = GET(LGi,d);
+            double LdGi = GET(LGi_,d);
 
             double Sd_ti = Sd_tiMinus1 * exp((r_ - sigma_d * sigma_d / 2) * step + sigma_d * sqrtStep * LdGi);
 
@@ -135,8 +137,8 @@ void BlackScholesModel::asset(PnlMat *path, double T, int nbTimeSteps, PnlRng *r
         }
     }
     // Free
-    pnl_vect_free(&Gi);
-    pnl_vect_free(&LGi);
+    //pnl_vect_free(&Gi);
+    //pnl_vect_free(&LGi);
 }
 
 void BlackScholesModel::shiftAsset(PnlMat *shift_path, const PnlMat *path, int d, double h, double t,
@@ -197,9 +199,11 @@ void BlackScholesModel::simul_market(int nbAssets, PnlMat *market){
 
 BlackScholesModel::~BlackScholesModel() {
     pnl_mat_free(&L);
-    //pnl_vect_free(&trend_);
-    //pnl_vect_free(&spot_);
-    //pnl_vect_free(&sigma_);
+    pnl_vect_free(&trend_);
+    pnl_vect_free(&spot_);
+    pnl_vect_free(&sigma_);
+    pnl_vect_free(&Gi_);
+    pnl_vect_free(&LGi_);
 
 }
 

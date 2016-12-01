@@ -16,6 +16,8 @@ public:
     PnlVect *trend_; /// vecteur de tendances instantanées en probabilité historique
     PnlVect *sigma_; /// vecteur de volatilités
     PnlVect *spot_; /// valeurs initiales du sous-jacent
+    PnlVect *Gi_;
+    PnlVect *LGi_;
     int H_;
     double T_;
 
