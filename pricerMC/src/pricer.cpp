@@ -157,30 +157,33 @@ void computePnL(ParserDatas *datas) {
     // Création du portefeuille et du vecteur de PnL (PnL à chaque date)
     PnlVect *pnlAtDate = pnl_vect_create(H + 1);
     // Initialisation
+    //Delta prec
     PnlVect *deltas_iMinus1 = pnl_vect_create(size);
+    //Stau courant, les prix au temps i des actifs
     PnlVect *Stau_i = pnl_vect_new();
     pnl_mat_get_row(Stau_i, market, 0);
-    PnlMat *past = pnl_mat_create(2, size);
+    PnlMat *past = pnl_mat_create(1, size);
     pnl_mat_set_row(past, model->spot_, 0);
-    pnl_mat_set_row(past, model->spot_, 1);
+    //pnl_mat_set_row(past, model->spot_, 1);
     double price,ic;
     monteCarlo->price(price,ic);
     monteCarlo->delta(past,0,deltas_iMinus1);
     double V_iMinus1 = price  - pnl_vect_scalar_prod(deltas_iMinus1,Stau_i);
     LET(pnlAtDate, 0) = 0; // Par construction
     // Foreach date
-    bool pastHasToBeActualized = false;
+    int iN = 1;
     for (int i = 1; i < pnlAtDate->size; ++i) {
         double t = i * marketStep;
         pnl_mat_get_row(Stau_i, market, i);
-        pnl_mat_set_row(past, Stau_i, past->m - 1);
         // Si on a passé le prochain pas du modèle ( non du marché ) // TODO Modifier le test dans le cas où N non multiple de H ?
-        if (pastHasToBeActualized) {
+
+        if ((i * marketStep) >= iN * T/N){
             pnl_mat_add_row(past, past->m, Stau_i);
-            pastHasToBeActualized = false;
+            iN++;
+        }else{
+            pnl_mat_set_row(past, Stau_i, past->m - 1);
         }
-        if (i % H/N == 0)
-            pastHasToBeActualized = true;
+
         LET(pnlAtDate, i) = hedging(monteCarlo, V_iMinus1, capitalizationFactor, deltas_iMinus1, Stau_i, past,t,price);
     }
 
