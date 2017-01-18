@@ -218,7 +218,7 @@ double hedging(MonteCarlo *monteCarlo, double& V_iMinus1, double capitalizationF
 
     double ic;
     monteCarlo->price(past,t,price,ic);
-
+    pnl_vect_clone(deltas_iMinus1,delta_i);
     double pi = deltas_iStau_i + Vi;
 
     V_iMinus1 = Vi;
