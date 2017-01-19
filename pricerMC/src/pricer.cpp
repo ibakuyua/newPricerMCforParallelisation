@@ -9,7 +9,7 @@
 #include "Options/OptionBasket.hpp"
 #include "Options/AsianOption.hpp"
 #include "Options/PerformanceOption.hpp"
-
+#include "pnl/pnl_finance.h"
 
 using namespace std;
 
@@ -162,9 +162,9 @@ void computePnL(ParserDatas *datas) {
     //Stau courant, les prix au temps i des actifs
     PnlVect *Stau_i = pnl_vect_new();
     pnl_mat_get_row(Stau_i, market, 0);
-    PnlMat *past = pnl_mat_create(1, size);
+    PnlMat *past = pnl_mat_create(2, size);
     pnl_mat_set_row(past, model->spot_, 0);
-    //pnl_mat_set_row(past, model->spot_, 1);
+    pnl_mat_set_row(past, model->spot_, 1);
     double price,ic;
     monteCarlo->price(price,ic);
     monteCarlo->delta(past,0,deltas_iMinus1);
@@ -177,7 +177,7 @@ void computePnL(ParserDatas *datas) {
         pnl_mat_get_row(Stau_i, market, i);
         // Si on a passé le prochain pas du modèle ( non du marché ) // TODO Modifier le test dans le cas où N non multiple de H ?
 
-        if ((i * marketStep) >= iN * T/N){
+        if ((i * marketStep) >= iN * T/N && (t < T)){
             pnl_mat_add_row(past, past->m, Stau_i);
             iN++;
         }else{
@@ -185,12 +185,13 @@ void computePnL(ParserDatas *datas) {
         }
 
         LET(pnlAtDate, i) = hedging(monteCarlo, V_iMinus1, capitalizationFactor, deltas_iMinus1, Stau_i, past,t,price);
+        std::cout << "Prix : " << price << std::endl;
     }
 
     // Display result
     displayParameters(datas);
     cout << "\n-----> Pay-Off [ " << price << " ]";
-    cout << "\n-----> PnL [ " << GET(pnlAtDate, H) << " ]\n";
+    cout << "\n-----> PnL [ " << GET(pnlAtDate, pnlAtDate->size - 1) << " ]\n";
     cout << "\n\n\n Marché : \n\n";
     pnl_mat_print(market);
     cout << "\n\n PnL at date : \n";
@@ -222,7 +223,9 @@ double hedging(MonteCarlo *monteCarlo, double& V_iMinus1, double capitalizationF
     double pi = deltas_iStau_i + Vi;
 
     V_iMinus1 = Vi;
-
+    std::cout << "La diff de prix est : " <<abs(price -   pnl_bs_call(MGET(past,past->m-1,0),100,monteCarlo->mod_->T_ - t,monteCarlo->mod_->r_,0,GET(monteCarlo->mod_->sigma_,0))) << std::endl;
+    //std::cout << "Notre prix est : " <<  << std::endl;
+    std::cout << "L'intervalle de confiance est : " << ic << std::endl ;
     return pi - price;
 }
 
